@@ -1,6 +1,10 @@
 package pgn
 
-import "strings"
+import (
+	"log"
+	"regexp"
+	"strings"
+)
 
 // this function is written to parse pgn into a struct
 /* Example pgn
@@ -41,6 +45,16 @@ func Parse(pgnbytes []byte) *PGN {
 		line := meta[i]
 		key, value := strings.Split(line, " ")[0], strings.Split(line, " ")[1]
 		getmeta[key] = value
+	}
+	movslic := regexp.MustCompile(`[0-9]+\.`).Split(pgnstring[len(pgnstring)-1], 100)
+	for _, val := range movslic {
+		move := strings.Split(val, " ")
+		if len(move) == 4 {
+			log.Println(move[1], "---", move[2])
+		} else {
+			log.Println(len(move))
+		}
+
 	}
 	return &PGN{Meta: getmeta}
 }
